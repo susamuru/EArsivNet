@@ -2,8 +2,8 @@
  eArsiv sistemlerinin tek çatı altında toplanması amaçlanmıştır.
 
 # Örnek Kullanım
-```
-var inv = new Invoice();
+```csharp
+            var inv = new Invoice();
             inv.OrderNo = "sipariş no";
             inv.InvoiceDate = DateTime.Now;
 
