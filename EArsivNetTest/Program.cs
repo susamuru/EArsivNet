@@ -9,30 +9,31 @@ namespace EArsivNetTest
     {
         static void Main(string[] args)
         {
-            Test();
+
+            CheckInvoice();
             Console.ReadKey();
         }
 
         static async void Test()
         {
             var inv = new Invoice();
-            inv.OrderNo = "sipariş no";
+            inv.InvoiceNo = "AA1";
+            //inv.OrderNo = "sipariş no";
             inv.InvoiceDate = DateTime.Now;
 
-            inv.Sender.Title = "Uyumsoft";
+            inv.Sender.Title = "StoreNate";
             inv.Sender.TaxOffice = "KURUMLAR";
             inv.Sender.TaxNo = "9000068418";
             inv.Sender.Country = "Türkiye";
             inv.Sender.City = "Antalya";
             inv.Sender.District = "Muratpaşa";
-            inv.Sender.Street = "sokak";
+            inv.Sender.Street = "Etiler mah, evliya çelebi caddesi no 15";
             inv.Sender.BuildingNumber = "23";
             inv.Sender.Room = "109";
 
-
-            inv.Receiver.Title = "Fatura başlığı";
+            inv.Receiver.Title = "HDN BILISIM AS";
             inv.Receiver.TaxOffice = "KURUMLAR";
-            inv.Receiver.TaxNo = "1111111111";
+            inv.Receiver.TaxNo = "1231231";
             inv.Receiver.Country = "Türkiye";
             inv.Receiver.City = "Antalya";
             inv.Receiver.District = "Kepez";
@@ -55,6 +56,13 @@ namespace EArsivNetTest
                 Console.WriteLine("Invoice Id : " + re.Data.InvoiceId);
                 Console.WriteLine("Invoice No : " + re.Data.InvoiceNo);
             }
+        }
+
+        static async void CheckInvoice()
+        {
+            var id = "47887b3e-e5db-4076-84b6-cc3edab02211";
+            IInvoiceClient uyumsoft = new UyumsoftService("Uyumsoft", "Uyumsoft", PlatformType.Test);
+            await uyumsoft.CheckInvoice(id);
         }
     }
 }

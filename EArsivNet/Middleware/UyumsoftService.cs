@@ -140,7 +140,6 @@ namespace EArsivNet.Middleware
                     {
                         PartyName = new PartyNameType { Name = new NameType1 { Value = inv.Sender.Title } },
                         PartyIdentification = new PartyIdentificationType[] { new PartyIdentificationType() { ID = new IDType { Value = inv.Sender.TaxNo, schemeID = "VKN" } }, },
-
                         PostalAddress = new AddressType
                         {
                             CityName = new CityNameType { Value = inv.Sender.City },
@@ -165,7 +164,7 @@ namespace EArsivNet.Middleware
                     Party = new PartyType
                     {
                         PartyName = new PartyNameType { Name = new NameType1 { Value = inv.Receiver.Title } },
-                        PartyIdentification = new PartyIdentificationType[] { new PartyIdentificationType { ID = new IDType { Value = inv.Receiver.TaxNo, schemeID = inv.Receiver.TaxNo.Length == 10 ? "VKN" : "TCKN" } } },
+                        PartyIdentification = new PartyIdentificationType[] { new PartyIdentificationType { ID = new IDType { Value = inv.Receiver.TaxNo, schemeID = inv.Receiver.TaxNo.Length == 11 ? "TCKN" : "VKN" } } },
                         PostalAddress = new AddressType
                         {
                             CityName = new CityNameType { Value = inv.Receiver.City },
@@ -375,6 +374,37 @@ namespace EArsivNet.Middleware
 
         }
 
+        async Task<Models.Response<Models.CheckInvoiceRes>> IInvoiceClient.CheckInvoice(string uuid)
+        {
+            var re = new Models.Response<Models.CheckInvoiceRes>();
+            try
+            {
 
+                var res = await client.QueryOutboxInvoiceStatusAsync(userInformation, new string[] { uuid });
+                if (res.IsSucceded)
+                {
+                    var val = res.Value.Where(x => x.InvoiceId == uuid).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(val.Message))
+                    {
+                        re.Message = $"{val.Status} : {val.Message}";
+                    }
+                    else
+                    {
+                        re.Message = val.Status.ToString();
+                    }
+                }
+                else
+                {
+                    throw new Exception(res.Message);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                re.InitError(ex);
+            }
+
+            return re;
+        }
     }
 }

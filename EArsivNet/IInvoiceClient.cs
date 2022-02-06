@@ -9,6 +9,8 @@ namespace EArsivNet
 {
     public interface IInvoiceClient
     {
-        Task<Response<SendInvoiceRes>> SendInvoice(Invoice inv);
+        public Task<Response<SendInvoiceRes>> SendInvoice(Invoice inv);
+
+        public Task<Response<CheckInvoiceRes>> CheckInvoice(string uuid);
     }
 }
